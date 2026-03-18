@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中央Sea - 音乐爱好者的交流天地</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1DB954',
+                        secondary: '#282828',
+                        accent: '#FF6B6B',
+                        light: '#F8F9FA',
+                        gold: '#FFD700', // 新增金币颜色
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto { content-visibility: auto; }
+            .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .card-hover { transition: all 0.3s ease; }
+            .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+            .category-item.active a { background-color: #1DB954/10; color: #1DB954; font-weight: 600; }
+            .category-item.active a .bg-gray-200 { background-color: #1DB954; color: white; }
+            .liked { color: #1DB954; font-weight: 600; }
+            .coin-badge { background-color: rgba(255, 215, 0, 0.1); color: #D4AF37; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+            <a href="#" class="flex items-center space-x-2 text-primary">
+                <i class="fa-solid fa-music text-2xl"></i>
+                <span class="text-xl font-bold">中央Sea</span>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#" class="font-medium text-primary border-b-2 border-primary py-1">首页</a>
+                <a href="music-theory.html" class="font-medium text-gray-600 hover:text-primary transition-colors py-1">音乐理论</a>
+                <a href="folk-western.html" class="font-medium text-gray-600 hover:text-primary transition-colors py-1">民乐/西洋乐</a>
+                <a href="vocal.html" class="font-medium text-gray-600 hover:text-primary transition-colors py-1">声乐</a>
+                <a href="career.html" class="font-medium text-gray-600 hover:text-primary transition-colors py-1">就业/创业</a>
+                <a href="teaching.html" class="font-medium text-gray-600 hover:text-primary transition-colors py-1">教学实践</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <!-- 新增金币图标和数量展示 -->
+                <div class="hidden md:flex items-center space-x-1 text-gold">
+                    <i class="fa-solid fa-coins"></i>
+                    <span class="font-medium">128</span>
+                </div>
+                <!-- 用户头像 -->
+                <div class="hidden md:block">
+                    <img src="https://picsum.photos/40/40?random=99" alt="用户头像" class="w-10 h-10 rounded-full object-cover">
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600"><i class="fa-solid fa-bars text-xl"></i></button>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-4 py-2">
+            <!-- 移动端显示金币 -->
+            <div class="flex items-center justify-between py-2 border-b border-gray-100 mb-2">
+                <div class="flex items-center space-x-1 text-gold">
+                    <i class="fa-solid fa-coins"></i>
+                    <span class="font-medium">128</span>
+                </div>
+                <img src="https://picsum.photos/40/40?random=99" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+            </div>
+            <nav class="flex flex-col space-y-3 py-2">
+                <a href="#" class="font-medium text-primary py-1">首页</a>
+                <a href="music-theory.html" class="font-medium text-gray-600 hover:text-primary transition-colors py-1">音乐理论</a>
+                <a href="folk-western.html" class="font-medium text-gray-600 hover:text-primary transition-colors py-1">民乐/西洋乐</a>
+                <a href="vocal.html" class="font-medium text-gray-600 hover:text-primary transition-colors py-1">声乐</a>
+                <a href="career.html" class="font-medium text-gray-600 hover:text-primary transition-colors py-1">就业/创业</a>
+                <a href="teaching.html" class="font-medium text-gray-600 hover:text-primary transition-colors py-1">教学实践</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- 左侧分类栏 -->
+            <aside class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-sm p-6 sticky top-24">
+                    <h2 class="text-lg font-bold mb-4 flex items-center space-x-2">
+                        <i class="fa-solid fa-list text-primary"></i><span>论坛分类</span>
+                    </h2>
+                    <ul class="space-y-2 category-list">
+                        <li class="category-item">
+                            <a href="music-theory.html" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                                <span class="flex items-center space-x-2"><i class="fa-solid fa-drum"></i><span>音乐理论</span></span>
+                                <span class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">89</span>
+                            </a>
+                        </li>
+                        <li class="category-item active">
+                            <a href="folk-western.html" class="flex items-center justify-between p-3 rounded-lg bg-primary/10 text-primary transition-colors">
+                                <span class="flex items-center space-x-2"><i class="fa-solid fa-microphone"></i><span>民乐\西洋乐</span></span>
+                                <span class="bg-primary text-white text-xs px-2 py-1 rounded-full">95</span>
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="vocal.html" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                                <span class="flex items-center space-x-2"><i class="fa-solid fa-headphones"></i><span>声乐</span></span>
+                                <span class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">78</span>
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="career.html" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                                <span class="flex items-center space-x-2"><i class="fa-solid fa-microphone"></i><span>就业/创业</span></span>
+                                <span class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">95</span>
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="teaching.html" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                                <span class="flex items-center space-x-2"><i class="fa-solid fa-compact-disc"></i><span>教学实践</span></span>
+                                <span class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">210</span>
+                            </a>
+                        </li>
+                        <li class="category-item">
+                            <a href="music-score.html" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                                <span class="flex items-center space-x-2"><i class="fa-solid fa-music"></i><span>曲谱</span></span>
+                                <span class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">128</span>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <!-- 新增金币任务栏 -->
+                    <div class="mt-6 pt-6 border-t border-gray-100">
+                        <h2 class="text-lg font-bold mb-4 flex items-center space-x-2">
+                            <i class="fa-solid fa-coins text-gold"></i><span>金币任务</span>
+                        </h2>
+                        <ul class="space-y-3">
+                            <li class="flex items-center justify-between">
+                                <span class="text-sm">每日签到</span>
+                                <button class="px-3 py-1 text-xs bg-gold/10 text-gold rounded-full hover:bg-gold/20 transition-colors">
+                                    <i class="fa-solid fa-coins mr-1"></i>领取5金币
+                                </button>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <span class="text-sm">发布帖子</span>
+                                <span class="text-xs text-gray-500"><i class="fa-solid fa-coins mr-1 text-gold"></i>奖励10金币</span>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <span class="text-sm">评论互动</span>
+                                <span class="text-xs text-gray-500"><i class="fa-solid fa-coins mr-1 text-gold"></i>奖励2金币</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 中间帖子列表 -->
+            <div class="lg:col-span-2">
+                <!-- 曲谱帖子 -->
+                <article class="bg-white rounded-xl shadow-sm overflow-hidden p-6 mb-6 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/48/48?random=18" alt="作者头像" class="w-12 h-12 rounded-full object-cover">
+                            <div>
+                                <h3 class="font-medium">曲谱分享君</h3>
+                                <div class="flex items-center space-x-2 text-xs text-gray-500">
+                                    <span>1天前 · 曲谱</span>
+                                    <!-- 新增作者金币标识 -->
+                                    <span class="coin-badge px-1.5 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-coins text-xs"></i> 589
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="delete-post text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 hover:text-primary transition-colors">
+                        <a href="music-score.html#popular">全网最全流行歌曲曲谱合集（附PDF下载）</a>
+                    </h3>
+                    <div class="mb-4 text-gray-600">
+                        整理了2025年热门流行歌曲曲谱，包含钢琴、吉他、古筝等多个版本，全部为高清PDF格式，附带指法标注和弹奏技巧说明。涵盖周杰伦、林俊杰、毛不易等歌手的热门曲目，新手也能轻松上手...
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">曲谱分享</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">流行歌曲</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">PDF下载</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <div class="flex space-x-6">
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors like-btn">
+                                <i class="fa-solid fa-thumbs-up"></i><span>218</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors comment-toggle" data-post-id="post-9">
+                                <i class="fa-solid fa-comment"></i><span>89</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                                <i class="fa-solid fa-bookmark"></i><span>收藏</span>
+                            </button>
+                            <!-- 新增打赏按钮（金币） -->
+                            <button class="flex items-center space-x-1 hover:text-gold transition-colors">
+                                <i class="fa-solid fa-coins"></i><span>打赏</span>
+                            </button>
+                        </div>
+                        <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                            <i class="fa-solid fa-share-nodes"></i><span>分享</span>
+                        </button>
+                    </div>
+                    <div class="reply-box hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200" data-post-id="post-9">
+                        <textarea class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none" rows="3" placeholder="写下你的回复..."></textarea>
+                        <div class="flex justify-end mt-2 space-x-2">
+                            <button class="cancel-reply px-3 py-1 text-sm text-gray-600 hover:text-gray-800">取消</button>
+                            <button class="submit-reply px-4 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary/90">发布回复</button>
+                        </div>
+                    </div>
+                </article>
+                <!-- 帖子1 -->
+                <article class="bg-white rounded-xl shadow-sm overflow-hidden p-6 mb-6 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/48/48?random=10" alt="作者头像" class="w-12 h-12 rounded-full object-cover">
+                            <div>
+                                <h3 class="font-medium">旋律猎手</h3>
+                                <div class="flex items-center space-x-2 text-xs text-gray-500">
+                                    <span>2小时前 · 全站热门</span>
+                                    <span class="coin-badge px-1.5 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-coins text-xs"></i> 1258
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="delete-post text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 hover:text-primary transition-colors">
+                        <a href="#">2025年必听的10首宝藏音乐推荐</a>
+                    </h3>
+                    <div class="mb-4 text-gray-600">
+                        分享10首小众但超好听的音乐，涵盖流行、民谣、电子等风格，每首都是精心挑选，适合不同心情下聆听。其中有3首独立音乐人作品，2首复古改编曲，5首氛围感纯音乐，附播放链接和推荐理由...
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">音乐推荐</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">宝藏歌曲</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">2025</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <div class="flex space-x-6">
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors like-btn">
+                                <i class="fa-solid fa-thumbs-up"></i><span>128</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors comment-toggle" data-post-id="post-1">
+                                <i class="fa-solid fa-comment"></i><span>64</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                                <i class="fa-solid fa-bookmark"></i><span>收藏</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-gold transition-colors">
+                                <i class="fa-solid fa-coins"></i><span>打赏</span>
+                            </button>
+                        </div>
+                        <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                            <i class="fa-solid fa-share-nodes"></i><span>分享</span>
+                        </button>
+                    </div>
+                    <div class="reply-box hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200" data-post-id="post-1">
+                        <textarea class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none" rows="3" placeholder="写下你的回复..."></textarea>
+                        <div class="flex justify-end mt-2 space-x-2">
+                            <button class="cancel-reply px-3 py-1 text-sm text-gray-600 hover:text-gray-800">取消</button>
+                            <button class="submit-reply px-4 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary/90">发布回复</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 帖子2 -->
+                <article class="bg-white rounded-xl shadow-sm overflow-hidden p-6 mb-6 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/48/48?random=11" alt="作者头像" class="w-12 h-12 rounded-full object-cover">
+                            <div>
+                                <h3 class="font-medium">钢琴小课堂</h3>
+                                <div class="flex items-center space-x-2 text-xs text-gray-500">
+                                    <span>5小时前 · 音乐理论</span>
+                                    <span class="coin-badge px-1.5 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-coins text-xs"></i> 896
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="delete-post text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 hover:text-primary transition-colors">
+                        <a href="#">新手学钢琴必避的5个常见误区</a>
+                    </h3>
+                    <div class="mb-4 text-gray-600">
+                        很多钢琴初学者容易陷入这些误区：1. 只练不看谱；2. 忽视基本功；3. 追求速度不重节奏；4. 长时间练琴不休息；5. 不做手指独立性训练。分享正确的练习方法和每日练琴计划...
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">钢琴教学</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">新手入门</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">避坑指南</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <div class="flex space-x-6">
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors like-btn">
+                                <i class="fa-solid fa-thumbs-up"></i><span>98</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors comment-toggle" data-post-id="post-2">
+                                <i class="fa-solid fa-comment"></i><span>42</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                                <i class="fa-solid fa-bookmark"></i><span>收藏</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-gold transition-colors">
+                                <i class="fa-solid fa-coins"></i><span>打赏</span>
+                            </button>
+                        </div>
+                        <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                            <i class="fa-solid fa-share-nodes"></i><span>分享</span>
+                        </button>
+                    </div>
+                    <div class="reply-box hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200" data-post-id="post-2">
+                        <textarea class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none" rows="3" placeholder="写下你的回复..."></textarea>
+                        <div class="flex justify-end mt-2 space-x-2">
+                            <button class="cancel-reply px-3 py-1 text-sm text-gray-600 hover:text-gray-800">取消</button>
+                            <button class="submit-reply px-4 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary/90">发布回复</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 帖子3 -->
+                <article class="bg-white rounded-xl shadow-sm overflow-hidden p-6 mb-6 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/48/48?random=12" alt="作者头像" class="w-12 h-12 rounded-full object-cover">
+                            <div>
+                                <h3 class="font-medium">民乐传承者</h3>
+                                <div class="flex items-center space-x-2 text-xs text-gray-500">
+                                    <span>1天前 · 民乐/西洋乐</span>
+                                    <span class="coin-badge px-1.5 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-coins text-xs"></i> 758
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="delete-post text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 hover:text-primary transition-colors">
+                        <a href="#">古筝入门：3个简单易学的经典曲目</a>
+                    </h3>
+                    <div class="mb-4 text-gray-600">
+                        适合古筝新手练习的3首经典曲目：《沧海一声笑》《茉莉花》《渔舟唱晚》，附简谱、指法标注和慢速教学视频链接。新手建议先练单音，再逐步加入颤音、滑音等技巧...
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">古筝</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">民乐</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">入门曲目</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <div class="flex space-x-6">
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors like-btn">
+                                <i class="fa-solid fa-thumbs-up"></i><span>76</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors comment-toggle" data-post-id="post-3">
+                                <i class="fa-solid fa-comment"></i><span>38</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                                <i class="fa-solid fa-bookmark"></i><span>收藏</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-gold transition-colors">
+                                <i class="fa-solid fa-coins"></i><span>打赏</span>
+                            </button>
+                        </div>
+                        <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                            <i class="fa-solid fa-share-nodes"></i><span>分享</span>
+                        </button>
+                    </div>
+                    <div class="reply-box hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200" data-post-id="post-3">
+                        <textarea class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none" rows="3" placeholder="写下你的回复..."></textarea>
+                        <div class="flex justify-end mt-2 space-x-2">
+                            <button class="cancel-reply px-3 py-1 text-sm text-gray-600 hover:text-gray-800">取消</button>
+                            <button class="submit-reply px-4 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary/90">发布回复</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 帖子4 -->
+                <article class="bg-white rounded-xl shadow-sm overflow-hidden p-6 mb-6 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/48/48?random=13" alt="作者头像" class="w-12 h-12 rounded-full object-cover">
+                            <div>
+                                <h3 class="font-medium">声乐导师Lisa</h3>
+                                <div class="flex items-center space-x-2 text-xs text-gray-500">
+                                    <span>2天前 · 声乐</span>
+                                    <span class="coin-badge px-1.5 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-coins text-xs"></i> 987
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="delete-post text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 hover:text-primary transition-colors">
+                        <a href="#">零基础学唱歌：5个开嗓热身技巧</a>
+                    </h3>
+                    <div class="mb-4 text-gray-600">
+                        唱歌前的开嗓热身至关重要！分享5个简单有效的开嗓方法：1. 气泡音练习；2. 唇颤音；3. 音阶爬音；4. 哼鸣练习；5. 咬字训练。每天练习10分钟，改善音色和音准...
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">声乐技巧</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">开嗓</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">零基础</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <div class="flex space-x-6">
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors like-btn">
+                                <i class="fa-solid fa-thumbs-up"></i><span>112</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors comment-toggle" data-post-id="post-4">
+                                <i class="fa-solid fa-comment"></i><span>56</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                                <i class="fa-solid fa-bookmark"></i><span>收藏</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-gold transition-colors">
+                                <i class="fa-solid fa-coins"></i><span>打赏</span>
+                            </button>
+                        </div>
+                        <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                            <i class="fa-solid fa-share-nodes"></i><span>分享</span>
+                        </button>
+                    </div>
+                    <div class="reply-box hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200" data-post-id="post-4">
+                        <textarea class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none" rows="3" placeholder="写下你的回复..."></textarea>
+                        <div class="flex justify-end mt-2 space-x-2">
+                            <button class="cancel-reply px-3 py-1 text-sm text-gray-600 hover:text-gray-800">取消</button>
+                            <button class="submit-reply px-4 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary/90">发布回复</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 帖子5 -->
+                <article class="bg-white rounded-xl shadow-sm overflow-hidden p-6 mb-6 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/48/48?random=14" alt="作者头像" class="w-12 h-12 rounded-full object-cover">
+                            <div>
+                                <h3 class="font-medium">音乐创业人</h3>
+                                <div class="flex items-center space-x-2 text-xs text-gray-500">
+                                    <span>3天前 · 就业/创业</span>
+                                    <span class="coin-badge px-1.5 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-coins text-xs"></i> 1125
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="delete-post text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 hover:text-primary transition-colors">
+                        <a href="#">开音乐工作室：成本控制与客源拓展</a>
+                    </h3>
+                    <div class="mb-4 text-gray-600">
+                        想开音乐工作室的朋友看过来！分享工作室选址技巧、设备采购清单、成本预算表，以及3种高效的客源拓展方式：线上社群运营、线下合作、体验课转化...
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">音乐创业</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">工作室</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">成本控制</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <div class="flex space-x-6">
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors like-btn">
+                                <i class="fa-solid fa-thumbs-up"></i><span>89</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors comment-toggle" data-post-id="post-5">
+                                <i class="fa-solid fa-comment"></i><span>45</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                                <i class="fa-solid fa-bookmark"></i><span>收藏</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-gold transition-colors">
+                                <i class="fa-solid fa-coins"></i><span>打赏</span>
+                            </button>
+                        </div>
+                        <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                            <i class="fa-solid fa-share-nodes"></i><span>分享</span>
+                        </button>
+                    </div>
+                    <div class="reply-box hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200" data-post-id="post-5">
+                        <textarea class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none" rows="3" placeholder="写下你的回复..."></textarea>
+                        <div class="flex justify-end mt-2 space-x-2">
+                            <button class="cancel-reply px-3 py-1 text-sm text-gray-600 hover:text-gray-800">取消</button>
+                            <button class="submit-reply px-4 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary/90">发布回复</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 帖子6 -->
+                <article class="bg-white rounded-xl shadow-sm overflow-hidden p-6 mb-6 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/48/48?random=15" alt="作者头像" class="w-12 h-12 rounded-full object-cover">
+                            <div>
+                                <h3 class="font-medium">音乐李老师</h3>
+                                <div class="flex items-center space-x-2 text-xs text-gray-500">
+                                    <span>4天前 · 教学实践</span>
+                                    <span class="coin-badge px-1.5 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-coins text-xs"></i> 1358
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="delete-post text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 hover:text-primary transition-colors">
+                        <a href="#">儿童音乐启蒙：5个趣味教学游戏</a>
+                    </h3>
+                    <div class="mb-4 text-gray-600">
+                        低龄儿童学音乐容易注意力不集中？分享5个趣味音乐教学游戏：1. 音符寻宝；2. 节奏拍手；3. 乐器猜猜乐；4. 旋律接龙；5. 音乐绘画。附游戏规则和教具准备清单...
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">儿童音乐</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">趣味教学</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">教学游戏</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <div class="flex space-x-6">
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors like-btn">
+                                <i class="fa-solid fa-thumbs-up"></i><span>145</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors comment-toggle" data-post-id="post-6">
+                                <i class="fa-solid fa-comment"></i><span>72</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                                <i class="fa-solid fa-bookmark"></i><span>收藏</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-gold transition-colors">
+                                <i class="fa-solid fa-coins"></i><span>打赏</span>
+                            </button>
+                        </div>
+                        <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                            <i class="fa-solid fa-share-nodes"></i><span>分享</span>
+                        </button>
+                    </div>
+                    <div class="reply-box hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200" data-post-id="post-6">
+                        <textarea class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none" rows="3" placeholder="写下你的回复..."></textarea>
+                        <div class="flex justify-end mt-2 space-x-2">
+                            <button class="cancel-reply px-3 py-1 text-sm text-gray-600 hover:text-gray-800">取消</button>
+                            <button class="submit-reply px-4 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary/90">发布回复</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 帖子7 -->
+                <article class="bg-white rounded-xl shadow-sm overflow-hidden p-6 mb-6 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/48/48?random=16" alt="作者头像" class="w-12 h-12 rounded-full object-cover">
+                            <div>
+                                <h3 class="font-medium">吉他玩家</h3>
+                                <div class="flex items-center space-x-2 text-xs text-gray-500">
+                                    <span>5天前 · 音乐理论</span>
+                                    <span class="coin-badge px-1.5 py-0.5 rounded-full">
+                                        <i class="fa-solid fa-coins text-xs"></i> 689
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="delete-post text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 hover:text-primary transition-colors">
+                        <a href="#">吉他和弦万能公式：新手快速上手</a>
+                    </h3>
+                    <div class="mb-4 text-gray-600">
+                        新手记不住吉他和弦？分享万能和弦公式：1-5-6-3-4-1-2-5，适用于90%的流行歌曲。附和弦指法图、转调技巧和10首适合练习的歌曲列表，新手也能快速弹唱...
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">吉他</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">和弦</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">弹唱</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <div class="flex space-x-6">
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors like-btn">
+                                <i class="fa-solid fa-thumbs-up"></i><span>105</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors comment-toggle" data-post-id="post-7">
+                                <i class="fa-solid fa-comment"></i><span>49</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                                <i class="fa-solid fa-bookmark"></i><span>收藏</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-gold transition-colors">
+                                <i class="fa-solid fa-coins"></i><span>打赏</span>
+                            </button>
+                        </div>
+                        <button class="flex items-center space-x-1 hover:text-primary transition-colors">
+                            <i class="fa-solid fa-share-nodes"></i><span>分享</span>
+                        </button>
+                    </div>
+                    <div class="reply-box hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200" data-post-id="post-7">
+                        <textarea class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none" rows="3" placeholder="写下你的回复..."></textarea>
+                        <div class="flex justify-end mt-2 space-x-2">
+                            <button class="cancel-reply px-3 py-1 text-sm text-gray-600 hover:text-gray-800">取消</button>
+                            <button class="submit-reply px-4 py-1 text-sm bg-primary text-white rounded-md hover:bg-primary/90">发布回复</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 加载更多按钮 -->
+                <div class="flex justify-center mt-8">
+                    <button id="load-more" class="px-6 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center space-x-2">
+                        <i class="fa-solid fa-spinner fa-spin hidden mr-2" id="load-spinner"></i>
+                        <span>加载更多</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右侧热门/推荐 -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-sm p-6 sticky top-24">
+                    <h2 class="text-lg font-bold mb-4 flex items-center space-x-2">
+                        <i class="fa-solid fa-fire text-accent"></i><span>热门推荐</span>
+                    </h2>
+                    <ul class="space-y-4">
+                        <li class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/64/64?random=20" alt="热门帖子封面" class="w-16 h-16 rounded-lg object-cover">
+                            <div>
+                                <a href="#" class="text-sm font-medium hover:text-primary line-clamp-2">2025年最值得学习的5种乐器</a>
+                                <p class="text-xs text-gray-500 mt-1">1.2k 阅读</p>
+                            </div>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/64/64?random=21" alt="热门帖子封面" class="w-16 h-16 rounded-lg object-cover">
+                            <div>
+                                <a href="#" class="text-sm font-medium hover:text-primary line-clamp-2">音乐艺考全攻略：备考/择校/录取</a>
+                                <p class="text-xs text-gray-500 mt-1">980 阅读</p>
+                            </div>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <img src="https://picsum.photos/64/64?random=22" alt="热门帖子封面" class="w-16 h-16 rounded-lg object-cover">
+                            <div>
+                                <a href="#" class="text-sm font-medium hover:text-primary line-clamp-2">独立音乐人如何推广自己的作品</a>
+                                <p class="text-xs text-gray-500 mt-1">856 阅读</p>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="mt-6 pt-6 border-t border-gray-100">
+                        <h2 class="text-lg font-bold mb-4 flex items-center space-x-2">
+                            <i class="fa-solid fa-user-group text-primary"></i><span>活跃用户</span>
+                        </h2>
+                        <ul class="space-y-3">
+                            <li class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://picsum.photos/40/40?random=30" alt="用户头像" class="w-10 h-10 rounded-full object-cover">
+                                    <div>
+                                        <p class="text-sm font-medium">旋律猎手</p>
+                                        <p class="text-xs text-gray-500">发布了 128 篇内容</p>
+                                    </div>
+                                </div>
+                                <!-- 新增用户金币数 -->
+                                <span class="text-xs text-gold">
+                                    <i class="fa-solid fa-coins"></i> 1258
+                                </span>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://picsum.photos/40/40?random=31" alt="用户头像" class="w-10 h-10 rounded-full object-cover">
+                                    <div>
+                                        <p class="text-sm font-medium">音乐李老师</p>
+                                        <p class="text-xs text-gray-500">发布了 96 篇内容</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gold">
+                                    <i class="fa-solid fa-coins"></i> 1358
+                                </span>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://picsum.photos/40/40?random=32" alt="用户头像" class="w-10 h-10 rounded-full object-cover">
+                                    <div>
+                                        <p class="text-sm font-medium">民乐传承者</p>
+                                        <p class="text-xs text-gray-500">发布了 87 篇内容</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gold">
+                                    <i class="fa-solid fa-coins"></i> 758
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- 新增金币排行榜 -->
+                    <div class="mt-6 pt-6 border-t border-gray-100">
+                        <h2 class="text-lg font-bold mb-4 flex items-center space-x-2">
+                            <i class="fa-solid fa-trophy text-gold"></i><span>金币排行榜</span>
+                        </h2>
+                        <ul class="space-y-3">
+                            <li class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <span class="w-6 h-6 flex items-center justify-center bg-gold text-white rounded-full text-xs">1</span>
+                                    <span class="text-sm">音乐李老师</span>
+                                </div>
+                                <span class="text-xs text-gold font-medium">1358 <i class="fa-solid fa-coins text-xs"></i></span>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <span class="w-6 h-6 flex items-center justify-center bg-gray-200 text-gray-700 rounded-full text-xs">2</span>
+                                    <span class="text-sm">音乐创业人</span>
+                                </div>
+                                <span class="text-xs text-gold font-medium">1125 <i class="fa-solid fa-coins text-xs"></i></span>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <span class="w-6 h-6 flex items-center justify-center bg-gray-200 text-gray-700 rounded-full text-xs">3</span>
+                                    <span class="text-sm">旋律猎手</span>
+                                </div>
+                                <span class="text-xs text-gold font-medium">1258 <i class="fa-solid fa-coins text-xs"></i></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-secondary text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fa-solid fa-music text-2xl text-primary"></i>
+                        <span class="text-xl font-bold">中央Sea</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">音乐爱好者的交流天地，分享音乐知识，交流学习心得，共同成长。</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fa-brands fa-weixin text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fa-brands fa-weibo text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors"><i class="fa-brands fa-qq text-xl"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-primary transition-colors">关于我们</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">用户协议</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">隐私政策</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">联系我们</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">帮助中心</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">金币规则</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">订阅更新</h3>
+                    <p class="text-gray-400 mb-4">订阅我们的周报，获取最新的音乐资讯和学习资源</p>
+                    <div class="flex">
+                        <input type="email" placeholder="你的邮箱地址" class="px-4 py-2 bg-gray-700 text-white rounded-l-lg focus:outline-none focus:ring-1 focus:ring-primary w-full">
+                        <button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-r-lg transition-colors">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
+                © 2026 中央Sea 音乐论坛. 保留所有权利.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 移动端菜单切换
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 评论框切换
+        const commentToggles = document.querySelectorAll('.comment-toggle');
+        const cancelReplies = document.querySelectorAll('.cancel-reply');
+        
+        commentToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const postId = toggle.getAttribute('data-post-id');
+                const replyBox = document.querySelector(`.reply-box[data-post-id="${postId}"]`);
+                // 隐藏其他回复框
+                document.querySelectorAll('.reply-box').forEach(box => {
+                    if (box.getAttribute('data-post-id') !== postId) {
+                        box.classList.add('hidden');
+                    }
+                });
+                // 切换当前回复框
+                replyBox.classList.toggle('hidden');
+            });
+        });
+
+        cancelReplies.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const replyBox = btn.closest('.reply-box');
+                replyBox.classList.add('hidden');
+                // 清空输入框
+                replyBox.querySelector('textarea').value = '';
+            });
+        });
+
+        // 点赞功能
+        const likeBtns = document.querySelectorAll('.like-btn');
+        likeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const countEl = btn.querySelector('span');
+                let count = parseInt(countEl.textContent);
+                
+                if (btn.classList.contains('liked')) {
+                    // 取消点赞
+                    btn.classList.remove('liked');
+                    count--;
+                    btn.style.color = '';
+                } else {
+                    // 点赞
+                    btn.classList.add('liked');
+                    count++;
+                    btn.style.color = '#1DB954';
+                }
+                
+                countEl.textContent = count;
+            });
+        });
+
+        // 加载更多
+        const loadMoreBtn = document.getElementById('load-more');
+        const loadSpinner = document.getElementById('load-spinner');
+        
+        loadMoreBtn.addEventListener('click', () => {
+            loadSpinner.classList.remove('hidden');
+            loadMoreBtn.querySelector('span').textContent = '加载中...';
+            
+            // 模拟加载延迟
+            setTimeout(() => {
+                loadSpinner.classList.add('hidden');
+                loadMoreBtn.querySelector('span').textContent = '没有更多内容了';
+                loadMoreBtn.disabled = true;
+                loadMoreBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }, 1500);
+        });
+
+        // 发布回复
+        const submitReplyBtns = document.querySelectorAll('.submit-reply');
+        submitReplyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const replyBox = btn.closest('.reply-box');
+                const textarea = replyBox.querySelector('textarea');
+                const postId = replyBox.getAttribute('data-post-id');
+                
+                if (textarea.value.trim() === '') {
+                    alert('请输入回复内容');
+                    return;
+                }
+                
+                // 模拟发布成功
+                alert('回复发布成功！');
+                textarea.value = '';
+                replyBox.classList.add('hidden');
+                
+                // 更新评论数
+                const commentToggle = document.querySelector(`.comment-toggle[data-post-id="${postId}"]`);
+                const commentCountEl = commentToggle.querySelector('span');
+                let commentCount = parseInt(commentCountEl.textContent);
+                commentCountEl.textContent = commentCount + 1;
+            });
+        });
+
+        // 删除帖子
+        const deletePostBtns = document.querySelectorAll('.delete-post');
+        deletePostBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (confirm('确定要删除这篇帖子吗？')) {
+                    const post = btn.closest('article');
+                    post.style.opacity = '0';
+                    setTimeout(() => {
+                        post.remove();
+                    }, 300);
+                }
+            });
+        });
+
+        // 新增金币打赏功能
+        const rewardBtns = document.querySelectorAll('.hover:text-gold');
+        rewardBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (confirm('确定要打赏作者吗？\n打赏将扣除您5个金币')) {
+                    alert('打赏成功！您已扣除5个金币，作者获得5个金币');
+                }
+            });
+        });
+
+        // 新增签到领取金币功能
+        const signInBtns = document.querySelectorAll('.bg-gold\\/10');
+        signInBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.textContent = '已领取';
+                btn.classList.remove('hover:bg-gold/20');
+                btn.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+                
+                // 更新用户金币数
+                const coinCounts = document.querySelectorAll('.text-gold span.font-medium');
+                coinCounts.forEach(count => {
+                    let current = parseInt(count.textContent);
+                    count.textContent = current + 5;
+                });
+                
+                alert('签到成功！领取了5个金币');
+            });
+        });
+    </script>
+</body>
+</html>
